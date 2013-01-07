@@ -12,6 +12,11 @@ This is just an example setup. You can of course adjust paths and settings to yo
 ```bash
 git clone git@github.com:alexex/bloggen.git
 cd bloggen
+
+virtualenv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
 mkdir -p content/posts content/pages content/files
 touch content/config.py
 
