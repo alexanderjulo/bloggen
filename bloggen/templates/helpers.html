@@ -1,0 +1,64 @@
+{% macro render_post(post, as_post=False) %}
+{% if as_post %}
+	<div class="page-header">
+		<h1>{{ post.meta['Title'] }}</h1>
+	</div>
+{% endif %}
+	<div class="row">
+		<div class="span7">
+			{{ post }}
+
+			{% if as_post and config['DISQUS_NAME'] %}
+				<hr>
+				<div id="disqus_thread"></div>
+				<script type="text/javascript">
+					/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+					var disqus_shortname = '{{ config["DISQUS_NAME"] }}'; // required: replace example with your forum shortname
+
+					/* * * DON'T EDIT BELOW THIS LINE * * */
+					(function() {
+				    	var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+				    	dsq.src = 'http://' + disqus_shortname + '.disqus.com/embed.js';
+				    	(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+				    })();
+				</script>
+			{% endif %}	
+		</div>
+
+		<div class="span2 offset1">
+			<ul class="unstyled">
+				<li><strong>
+					{% if post.meta.get('Author') %}
+						{{ post.meta.get('Author') }}
+					{% elif config['AUTHOR'] %}
+						{{ config['AUTHOR'] }}
+					{% else %}
+						Unknown
+					{% endif %}
+				</strong></li>
+				{% if post.meta.get('Date') %}
+					<li>on {{ post.meta.get('Date')|formatdatetime }}</li>
+				{% endif %}
+				<br />
+				{% if post.meta.get('Tags') %}
+					<li>Tags:&nbsp;
+						{%- for tag in post.meta.get('Tags') -%}
+							{{ tag }}
+							{%- if not loop.last %}, {% endif -%}
+						{%- endfor -%}
+					</li>
+					<br />
+				{% endif %}
+				<li><a href="{{ post.url }}">Permalink</a></li>
+				{% if config['DISQUS_NAME'] %}
+					<li><a href="{{ post.url }}#disqus_thread">Disqus</a></li>
+				{% endif %}
+
+				{% if config['ADMIN'] and g.admin %}
+					<br />
+					<li><a href="{{ url_for('admin.edit_post', path=post.path) }}">Edit</a> / <a href="{{ url_for('admin.delete_post', path=post.path) }}">Delete</a></li>
+				{% endif %}
+			</ul>
+		</div>
+	</div>
+{% endmacro %}

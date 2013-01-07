@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Interface Login{% endblock title %}¨
+
+{% block body %}
+<div class="row">
+	<div class="span4 offset3">
+		<form class="form form-inline" method="POST">
+			{{ form.hidden_tag() }}
+			{{ form.password(placeholder="Your Password") }} {{ form.submit(class="btn btn-primary") }}
+		</form>
+	</div>
+</div>
+{% endblock body %}

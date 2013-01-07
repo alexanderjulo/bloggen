@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title -%}
+{{ post.meta['Title'] }}
+{%- endblock title %}
+
+{% block body %}
+{{ render_post(post, as_post=True) }}
+{% endblock body %}

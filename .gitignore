@@ -1,0 +1,8 @@
+# python
+*.pyc
+.venv
+
+# bloggen specific
+# ignore the default content directory
+content
+*.sublime-*

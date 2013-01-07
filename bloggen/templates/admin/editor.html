@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title -%}
+Content Editor
+{%- endblock %}
+
+{% block head %}
+<link rel="stylesheet" type="text/css" href="{{ 'pagedown.css'|static }}">
+<style type="text/css">
+	#preview-tab {
+		height: 360px;
+	}
+	#wmd-input {
+		margin-top: 10px;
+	}
+	#datetime {
+		margin-left: 15px;
+	}
+</style>
+
+<script type="text/javascript" src="{{ 'pagedown.js'|static }}"></script>
+<script type="text/javascript">
+	$('document').ready(function(){
+		var converter = Markdown.getSanitizingConverter();
+		var editor = new Markdown.Editor(converter);
+		editor.run();
+	})
+</script>
+{% endblock head %}
+
+{% block body %}
+<form class="form" method="POST">
+	{{ form.hidden_tag() }}
+	{{ form.title(class="span10", placeholder="Title") }}
+	{% if form.author and form.datetime %}
+		{{ form.author(class="span5", placeholder="Name of the author (default will be used, if none is given.)") }}
+		{{ form.datetime(class="span5", placeholder="Date and time (now will be used, if none is given.)")}}
+	{% endif %}
+	<div class="tabbable tabs-below">
+		<div class="tab-content">
+			<div class="tab-pane active" id="editor-tab">
+				<div class="wmd-panel">
+					<div id="wmd-button-bar"></div>
+					{{ form.body(id="wmd-input", class="wmd-input") }}
+				</div>
+			</div>
+			<div class="tab-pane" id="preview-tab">
+				<div class="wmd-panel">
+					<div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+				</div>
+			</div>
+		</div>
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="#editor-tab" data-toggle="tab">Editor</a></li>
+			<li><a href="#preview-tab" data-toggle="tab">Preview</a></li>
+		</ul>
+	</div>
+	{{ form.url(class="span10", placeholder="URL")}}
+	<div class="form-actions">
+		{{ form.submit(class="btn btn-primary") }}
+	</div>
+</form>
+{% endblock body %}

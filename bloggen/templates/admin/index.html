@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock title %}
+
+{% block head %}
+<style type="text/css">
+	#posts h3 {
+		line-height: 24.5px;
+	}
+</style>
+{% endblock head %}
+
+{% block body %}
+<div class="page-header">
+	<h1>{{ self.title() }}</h1>
+</div>
+<div class="row">
+	<div class="span7">
+		<h2>All Posts</h2>
+		<ul class="unstyled" id="posts">
+			{% for post in posts %}
+				<li>
+					<h3>
+						{{ post.meta['Title'] }}<br />
+						<small>
+							<a href="{{ url_for('public.post', url=post.path) }}">View</a> / <a href="{{ url_for('admin.edit_post', path=post.path) }}">Edit</a> / <a href="{{ url_for('admin.delete_post', path=post.path) }}">Delete</a>
+						</small>
+					</h3>
+
+					{{ post.html|truncate(300)|safe }}
+				</li>
+				{% if not loop.last %}<hr>{% endif %}
+			{% endfor %}
+		</ul>
+	</div>
+
+	<div class="span3">
+		<ul class="nav nav-tabs nav-stacked">
+			<li><a href="{{ url_for('admin.create') }}">Create something</a></li>
+		</ul>
+
+		<h3>Pages</h3>
+		<ul>
+			{% for page in pages %}
+				<li><a href="{{ page.url }}">{{ page.meta['Title'] }}</a></li>
+			{% endfor %}
+		</ul>
+	</div>
+</div>
+{% endblock body %}

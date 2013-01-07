@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+
+{% from 'helpers.html' import render_post with context %}
+
+<html>
+	<head>
+		<title>{% block title %}{% endblock title %}</title>
+		<meta charset="utf-8;">
+		<link rel="stylesheet" type="text/css" href="{{ 'bootstrap.min.css'|static }}">
+		<style type="text/css">
+			body {
+				padding-top: 60px;
+			}
+		</style>
+		<link rel="stylesheet" type="text/css" href="{{ 'bootstrap-responsive.min.css'|static }}">
+		<style type="text/css">
+			#footer {
+				margin-top: 30px;
+				color: gray;
+			}
+			#disqus_thread {
+				min-height: 332px;
+			}
+		</style>
+
+		<script type="text/javascript" src="{{ 'jquery.min.js'|static }}"></script>
+		<script type="text/javascript" src="{{ 'bootstrap.min.js'|static }}"></script>
+
+		{% block head %}	
+		{% endblock head %}
+	</head>
+
+	<body>
+		<div class="navbar navbar-fixed-top">
+			<div class="navbar-inner">
+				<div class="container">
+					<div class="row">
+						<div class="span10 offset1">
+							<button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar"></span>
+							</button>
+							<a href="#" class="brand">{{ config['SITE_NAME'] }}</a>
+								<div class="nav-collapse collapse">
+								<ul class="nav">
+									<li><a href="{{ url_for('public.index') }}">Blog</a></li>
+									{% if config['PAGES_MENU'] %}
+										<li class="divider-vertical"></li>
+										{% for page in PAGES %}
+											<li><a href="{{ page.url }}">{{ page.meta['Title'] }}</a></li>
+										{% endfor %}
+									{% endif %}
+								</ul>
+								<ul class="nav pull-right">
+									{% if config['ADMIN'] %}
+										{% if g.admin %}
+											<li><a href="{{ url_for('admin.index') }}">Admin</a></li>
+											<li><a href="{{ url_for('admin.logout') }}">Logout</a></li>
+										{% endif %}
+									{% endif %}
+									{% if config['SOCIAL_MENU'] %}
+										<li class="dropdown">
+											<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+												Social
+												<b class="caret"></b>
+											</a>
+											<ul class="dropdown-menu">
+												{% for url, name in config['SOCIAL_MENU'] %}
+													<li><a href="{{ url }}">{{ name }}</a></li>
+												{% endfor %}
+											</ul>
+										</li>
+									{% endif %}
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+		</div>
+
+		<div class="container">
+			<div class="row">
+				<div class="span10 offset1">
+					{% block body %}
+					{% endblock body %}
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="span10 offset1" id="footer">
+					<p class="pull-right">Operated by <a href="http://julo.ch/portfolio/#bloggen">bloggen</a>.</p>
+				</div>
+			</div>
+		</div>
+
+	{% if config['DISQUS_NAME'] %}
+		<script type="text/javascript">
+			/* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+			var disqus_shortname = '{{ config["DISQUS_NAME"] }}'; // required: replace example with your forum shortname
+
+			/* * * DON'T EDIT BELOW THIS LINE * * */
+			(function () {
+				var s = document.createElement('script'); s.async = true;
+				s.type = 'text/javascript';
+				s.src = 'http://' + disqus_shortname + '.disqus.com/count.js';
+				(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+			}());
+		</script>
+	{% endif %}
+	</body>
+</html>

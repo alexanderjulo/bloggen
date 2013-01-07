@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title -%}
+Blog
+{%- endblock title %}
+
+{% block body %}
+{% if posts %}
+	{% for post in posts %}
+		<div class="page-header">
+			<h1>{{ post.meta['Title'] }}</h1>
+		</div>
+		{{ render_post(post) }}
+	{% endfor %}
+	<div class="pagination pagination-centered">
+		<ul>
+			{% for page in posts.iter_pages() %}
+				<li{% if posts.page == page %} class="active"{% endif %}>
+					<a href="{{ url_for('public.index', page=page) }}">{{ page }}</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+{% else %}
+	<p>There are no posts yet, sorry.</p>
+{% endif %}
+{% endblock body %}
