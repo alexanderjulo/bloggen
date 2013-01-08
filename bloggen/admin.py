@@ -20,6 +20,7 @@ class PageForm(ContentForm):
 class PostForm(ContentForm):
 	datetime = fields.DateTimeField('Date and Time', [validators.Optional()])
 	author = fields.TextField('Author', [validators.Optional()])
+	tags = fields.TextField('Tags', [validators.Optional()])
 
 class LoginForm(Form):
 	password = fields.PasswordField('Password', [validators.Required()])
@@ -90,9 +91,7 @@ def edit_post(path):
 	form = PostForm()
 	post.load_to_form(form)
 	if form.validate_on_submit():
-		print form.author.data
 		post.save_from_form(form)
-		print post.meta['Author']
 		post.save()
 		return redirect(post.url)
 	return render_template('admin/editor.html', form=form)
