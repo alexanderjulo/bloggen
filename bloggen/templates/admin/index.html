@@ -29,7 +29,7 @@ Admin Dashboard
 						</small>
 					</h3>
 
-					{{ post.html|truncate(300)|safe }}
+					{{ post.body|truncate(300) }}
 				</li>
 				{% if not loop.last %}<hr>{% endif %}
 			{% endfor %}
