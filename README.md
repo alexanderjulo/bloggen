@@ -54,6 +54,11 @@ PAGES_MENU = True or False
 # optional
 # default is False
 
+BLOG_MENU = True or False
+# whether you want to have further blog links in your menu
+# optional
+# default is True
+
 DISQUS_NAME = False or 'your disqus name'
 # if you want to enable disqus, set this to your short name
 # optional
@@ -95,9 +100,15 @@ Pages and posts are stored as plain text files in their folders. Metadata will b
 Title: <title>
 Author: <author>
 Date: <date>
-Tags: ['a', 'list', 'of', 'tags']
+Tags:
+- i
+- am
+- a
+- tag
 
 ## Markdown body
 ```
 
-Besides `Title` all metadata is optional and can be spared.
+Besides `Title` all metadata is optional and can be spared. If you want to use `:` in your metadata contents, please enclose the strings in "".
+
+Every tag has to be in it's own line and has to be prefix by an -. PYYAML is very intolerant in this regard, so indentation is not allowed either.
