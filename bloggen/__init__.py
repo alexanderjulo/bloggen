@@ -15,6 +15,7 @@ class DefaultConfig(object):
 	DATETIME_FORMAT = '%d. %B %Y'
 	AUTHOR = None
 	FREEZE = False
+	BLOG_MENU = True
 
 def create_app(config=None, configfile=None):
 	app = Flask(__name__)

@@ -1,5 +1,5 @@
 import os
-import time, datetime
+from datetime import datetime, date
 from math import ceil
 from urltomd import Content
 from utils import get_date
@@ -13,11 +13,20 @@ class CustomContent(Content):
 			form.body.data = self.body
 		if not form.url.data:
 			form.url.data = self.path
+		if not form.tags.data and self.meta.get('Tags'):
+			taglist = self.meta.get('Tags')
+			tags = taglist.pop(0)
+			for tag in taglist:
+				tags += ", %s" % tag
+			form.tags.data = tags
 
 	def save_from_form(self, form):
 		self.meta['Title'] = form.title.data
 		self.body = form.body.data
 		self.path = form.url.data
+		if form.tags.data:
+			tags = [tag.strip() for tag in form.tags.data.split(',')]
+			self.meta['Tags'] = tags
 
 class Post(CustomContent):
 
@@ -26,10 +35,13 @@ class Post(CustomContent):
 		if not self.meta.get('Date'):
 			if os.path.exists(self._full_path()):
 				mtime = os.path.getctime(self._full_path())
-				dt = datetime.datetime.strptime(time.ctime(mtime),
+				dt = datetime.strptime(time.ctime(mtime),
 					"%a %b %d %H:%M:%S %Y")
 				self.meta['Date'] = dt
-		elif not isinstance(self.meta.get('Date'), datetime.datetime):
+		elif isinstance(self.meta.get('Date'), date):
+			d = self.meta['Date']
+			self.meta['Date'] = datetime(d.year, d.month, d.day)
+		elif not isinstance(self.meta.get('Date'), datetime):
 			self.meta['Date'] = get_date(self.meta['Date'])
 
 	def load_to_form(self, form):
@@ -107,23 +119,3 @@ class Pagination(object):
 	@property
 	def has_next(self):
 		return self.page < self.pages
-
-class User(Content):
-
-	name = None
-	password = None
-	authenticated = False
-	active = True
-
-	def is_active(self):
-		return self.active
-
-	def is_authenticated(self):
-		return self.authenticated
-
-	def is_anonymous(self):
-		return False
-
-	def __init__(self, name, password):
-		self.name = name
-		self.password = password

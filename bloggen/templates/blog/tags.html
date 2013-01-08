@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Tags{% endblock title %}
+
+{% block head %}
+<script type="text/javascript">
+	$('document').ready(function() {
+		var tag = window.location.hash.substring(1);
+		$('#' + tag).collapse('show')
+	});
+</script>
+{% endblock head %}
+
+{% block body %}
+<div class="page-header">
+	<h1>{{ self.title() }}</h1>
+</div>
+<div class="row">
+	{% if tags %}
+		<div class="span6">
+			<div class="accordion" id="tags">
+				{% for tag, posts in tags %}
+					<div class="accordion-group">
+						<div class="accordion-heading">
+							<a href="#tag-{{ tag }}" data-toggle="collapse" data-parent="#tags" class="accordion-toggle">
+								{{ tag }}
+							</a>
+						</div>
+						<div id="tag-{{ tag }}" class="accordion-body collapse anchor">
+							<div class="accordion-inner">
+								<p>Most recent posts{% if posts|count > 5 %} <a href="{{ url_for('public.tag', tag=tag) }}">(all)</a>{% endif %}:
+								</p>
+								<ol>
+									{% for post in posts|sortbydate|firsts(5) %}
+										<li><a href="{{ post.url }}">{{ post.meta['Title'] }}</a>     <small>{{ post.meta['Date']|formatdatetime }}</small></li>
+									{% endfor %}
+								</ol>
+								
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+		<div class="span4">
+			<div class="well">
+				<p>Future Tagcloud</p>
+			</div>
+		</div>
+	{% else %}
+		<div class="span10">
+			<p>There are no tagged posts so far.</p>
+		</div>
+	{% endif %}
+</div>
+{% endblock %}
