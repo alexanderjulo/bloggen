@@ -6,11 +6,24 @@ Content Editor
 {% block head %}
 <link rel="stylesheet" type="text/css" href="{{ 'pagedown.css'|static }}">
 <style type="text/css">
-	#preview-tab {
-		height: 360px;
-	}
 	#wmd-input {
 		margin-top: 10px;
+		border-bottom: 0px;
+		padding-bottom: 0px;
+		margin-bottom: 0px;
+		-moz-border-radius: 0px;
+		-webkit-border-radius: 0px;
+		border-radius: 0px;
+		border-left-color: #DDD;
+	}
+	#wmd-preview {
+		border: 1px solid;
+		border-bottom: transparent;
+		border-color: #DDD;
+		width: 100%;
+		height: 300px;
+		margin-top: 50px;
+		overflow: scroll;
 	}
 	#datetime {
 		margin-left: 15px;
@@ -45,16 +58,17 @@ Content Editor
 			</div>
 			<div class="tab-pane" id="preview-tab">
 				<div class="wmd-panel">
-					<div id="wmd-preview" class="wmd-panel wmd-preview"></div>
+					<div id="wmd-spacer"></div>
+					<div id="wmd-preview" class="wmd-panel wmd-preview">&nbsp;</div>
 				</div>
 			</div>
 		</div>
-		<ul class="nav nav-tabs">
+		<ul class="nav nav-tabs" id="wmd-tabs">
 			<li class="active"><a href="#editor-tab" data-toggle="tab">Editor</a></li>
 			<li><a href="#preview-tab" data-toggle="tab">Preview</a></li>
 		</ul>
 	</div>
-	{{ form.url(class="span10", placeholder="URL")}}
+	{{ form.tags(placeholder="Tags", class="span5") }} {{ form.url(class="span5", placeholder="URL")}}
 	<div class="form-actions">
 		{{ form.submit(class="btn btn-primary") }}
 	</div>
