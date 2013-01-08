@@ -18,3 +18,16 @@ def get_date(string):
 				except ValueError:
 						pass
 		raise ValueError("'%s' is not a valid date" % string)
+
+def group_by_tag(posts):
+	grouped = {}
+	for post in posts:
+		tags = post.meta.get('Tags')
+		if not tags:
+			continue
+		for tag in tags:
+			if grouped.get(tag):
+				grouped[tag].append(post)
+			else:
+				grouped[tag] = [post]
+	return grouped
