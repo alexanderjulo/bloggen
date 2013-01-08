@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 # i stole this from pelican
 # https://github.com/getpelican/pelican/blob/master/pelican/utils.py#L50
 def get_date(string):
@@ -19,7 +20,12 @@ def get_date(string):
 						pass
 		raise ValueError("'%s' is not a valid date" % string)
 
-def group_by_tag(posts):
+def sort_posts_by_date(posts):
+	return sorted(posts,
+		key=lambda post: post.meta.get('Date'),
+		reverse=True)
+
+def group_posts_by_tag(posts):
 	grouped = {}
 	for post in posts:
 		tags = post.meta.get('Tags')
