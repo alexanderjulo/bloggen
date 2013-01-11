@@ -21,9 +21,6 @@ class Content(object):
 			self._read()
 
 	def __repr__(self):
-		if self.meta.get('Title'):
-			return "<Content object '%s' at '%s.md'>" % \
-				(self.meta.get('Title'), self.path)
 		return "<Content object at '%s.md'>" % self.path
 
 	def _read(self):
@@ -110,9 +107,9 @@ class Mapper(object):
 	def _get(self, path):
 		return self.contentclass(self.path, path)
 
-	def get(self, path):
+	def get(self, path, check=True):
 		path = trim_path(path)
-		if not self.exists(path):
+		if check and not self.exists(path):
 			return None
 		return self._get(path)
 
@@ -123,7 +120,7 @@ class Mapper(object):
 		directory = '/'.join(path.split('/')[:-1])
 		if len(directory) > 0 and not os.path.exists(self.path + directory):
 			os.makedirs(self.path + path)
-		return self._get(path)
+		return self.get(path, check=None)
 
 	def delete(self, path):
 		path = trim_path(path)
@@ -142,7 +139,7 @@ class Mapper(object):
 					path = u'/'.join(path_prefix + (name[:-3],))
 					if subdirectory:
 						path = u'/'.join([subdirectory, path])
-					element = self._get(path)
+					element = self.get(path, check=None)
 					elements[element.url] = element
 		elements = {}
 		if subdirectory:
