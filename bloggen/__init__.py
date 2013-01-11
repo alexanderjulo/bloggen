@@ -16,6 +16,7 @@ class DefaultConfig(object):
 	AUTHOR = None
 	FREEZE = False
 	BLOG_MENU = True
+	CACHE_TYPE = 'simple'
 
 def create_app(config=None, configfile=None):
 	app = Flask(__name__)
@@ -29,6 +30,8 @@ def create_app(config=None, configfile=None):
 	pages.init_path(os.path.join(app.config['CONTENT_DIR'], 'pages'))
 	posts.init_path(os.path.join(app.config['CONTENT_DIR'], 'posts'))
 
+	cache.init_app(app)
+
 	import template
 	template.setUp(app)
 
@@ -39,10 +42,19 @@ def create_app(config=None, configfile=None):
 		import admin
 		admin.setUp(app)
 
+	try:
+		from flask.ext.debugtoolbar import DebugToolbarExtension
+		app.config['DEBUG_TB_PROFILER_ENABLED'] = True
+		debugtoolbar = DebugToolbarExtension(app)
+	except ImportError:
+		pass
+
 	return app
 
-import urltomd
-from classes import Page, Post
+from flask.ext.cache import Cache
+cache = Cache()
 
-pages = urltomd.Mapper(contentclass=Page)
-posts = urltomd.Mapper(contentclass=Post)
+from classes import Mapper, Page, Post
+
+pages = Mapper(contentclass=Page)
+posts = Mapper(contentclass=Post)

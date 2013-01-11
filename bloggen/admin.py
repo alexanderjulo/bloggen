@@ -3,7 +3,7 @@ from wtforms import fields, validators, ValidationError
 from flask import Blueprint, render_template, redirect, abort, url_for
 from flask import current_app, g, session
 from flask.ext.wtf import Form
-from bloggen import pages, posts
+from bloggen import pages, posts, cache
 from classes import Pagination
 
 admin = Blueprint('admin', __name__)
@@ -135,6 +135,11 @@ def delete_page(path):
 	if not pages.exists(path):
 		return abort(404)
 	pages.delete(path)
+	return redirect(url_for('admin.index'))
+
+@admin.route('/cache/clear/')
+def clear_cache():
+	cache.cache.clear()
 	return redirect(url_for('admin.index'))
 
 def check_admin_session():

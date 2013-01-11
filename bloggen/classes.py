@@ -1,10 +1,27 @@
 import os
+import time
 from datetime import datetime, date
 from math import ceil
-from urltomd import Content
-from utils import get_date
+from bloggen import cache
+from bloggen import urltomd
+from bloggen.utils import get_date
 
-class CustomContent(Content):
+def make_cache_key(f, element, body):
+	return f.__name__ + "/" + element.path
+
+class Mapper(urltomd.Mapper):
+
+	def get(self, path, check=True):
+		path = urltomd.trim_path(path)
+		if check and not self.exists(path):
+			return None
+		return self._get(path, os.path.getctime(self.path + path + '.md'))
+
+	@cache.memoize()
+	def _get(self, file, ctime=None):
+		return self.contentclass(self.path, file)
+
+class CustomContent(urltomd.Content):
 
 	def load_to_form(self, form):
 		if not form.title.data:
@@ -27,6 +44,15 @@ class CustomContent(Content):
 		if form.tags.data:
 			tags = [tag.strip() for tag in form.tags.data.split(',')]
 			self.meta['Tags'] = tags
+
+	@cache.memoize()
+	def _render(self, body):
+		return super(CustomContent, self)._render(body)
+
+	_render.make_cache_key = make_cache_key
+
+	def _load_meta(self, meta):
+		return super(CustomContent, self)._load_meta(meta)
 
 class Post(CustomContent):
 
